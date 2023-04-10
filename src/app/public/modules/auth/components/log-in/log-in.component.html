@@ -1,0 +1,31 @@
+<div class="login-page">
+
+    <div class="login-container">
+        <div class="login-title">
+            <span>Bienvenido a My CryptoWallet, una app de: </span>
+            <span class="logo-santander"> Satander</span>
+        </div>
+
+        <div class="login-form-container">
+            <form [formGroup]="loginForm">
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Enter your email</mat-label>
+                    <input matInput  type="text" name="mail" formControlName="mail">
+                </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="example-full-width">
+                    <mat-label>Enter your password</mat-label>
+                    <input matInput type="password" name="password" formControlName="password">
+                  </mat-form-field>
+
+                  <button mat-raised-button color="warn" (click)="sendLogin()">Entrar</button>
+ 
+            </form>
+
+        </div>
+    </div>
+
+    
+
+</div>

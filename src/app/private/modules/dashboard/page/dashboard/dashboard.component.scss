@@ -1,0 +1,26 @@
+.dashboard{
+    & .header{
+        & .first-header{
+            display: flex;
+            justify-content: space-between;
+        }
+        & .second-header{
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            border-bottom: 0.5px solid #f44336;
+
+            & .second-header-balance{
+                display: flex;
+                align-items: center;
+
+                & span{
+                    margin-right: 10px;
+                }
+                & button{
+                    font-size: 1.5rem;
+                }
+            }
+        }
+    }
+}

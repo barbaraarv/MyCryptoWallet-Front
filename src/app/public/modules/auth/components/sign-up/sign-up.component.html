@@ -1,0 +1,70 @@
+<div class="signUp-page">
+
+    <div class="signUp-container">
+        <div class="signUp-title">
+            <span>Bienvenido a My CryptoWallet, una app de: </span>
+            <span class="logo-santander"> Satander</span>
+        </div>
+
+        <div class="signUp-form-container">
+            <form [formGroup]="signUpForm">
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Enter your name</mat-label>
+                    <input matInput  type="text" name="name" formControlName="name" maxlength="50">
+                    <mat-error>Do not use special characters</mat-error>
+                </mat-form-field>
+                
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Enter your lastname</mat-label>
+                    <input matInput  type="text" name="lastName" formControlName="lastName" maxlength="50">
+                    <mat-error>Do not use special characters</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Enter your ID</mat-label>
+                    <input matInput  type="text" name="id" formControlName="id" maxlength="9" minlength="8">
+                    
+                    <mat-hint align="end">No '-' or spaces</mat-hint>
+                    <mat-error>Do not use '-' or spaces</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Select your birthdate</mat-label>
+                    <input matInput [matDatepicker]="picker" name="birthdate" formControlName="birthdate">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error>Must be over 18 years old</mat-error>
+                  </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Enter your email</mat-label>
+                    <input matInput  type="email" name="mail" formControlName="mail">
+                    <mat-error>Does not match an email pattern</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Enter your password</mat-label>
+                    <input matInput type="password" name="password" formControlName="password">
+                    <mat-error>Must have at least one lowercase, one uppercase, one number and be at least 8 characters long</mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="secondPassword" appearance="outline">
+                    <mat-label>Repite your password</mat-label>
+                    <input matInput type="password" name="secondPassword" formControlName="secondPassword">
+                    <mat-error>Passwords must match</mat-error>
+                </mat-form-field>
+
+                  <!-- <mat-error *ngIf="signUpForm.hasError('doNotMatch')">Passwords must match</mat-error> -->
+
+                  <button mat-raised-button color="warn" (click)="sendsignUp()">Entrar</button>
+ 
+            </form>
+
+        </div>
+    </div>
+
+    
+
+</div>
