@@ -1,15 +1,18 @@
 <div class="dashboard">
     <div class="header">
         <mat-toolbar color="warn" class="first-header">
-          <span>Santander <i class="stars material-symbols-outlined white-text">wallet</i> </span>
+          <div class="first-header-content">
+            <span>Santander <i class="stars material-symbols-outlined white-text">wallet</i> </span>
       
-          <span>Cerrar sesión</span>
+          <span class="log-out" (click)="logOut()">Cerrar sesión</span>
+          </div>
+          
         </mat-toolbar>
         <mat-toolbar class="second-header">
             <span name="userName">Hola <b>{{ user.user_name }}</b></span>
             <div class="second-header-balance">
                 <span name="userBalance">tu balance actual es: <b> {{ user.user_balance }}</b>€ </span>
-                <button mat-fab color="warn" >+</button>
+                <button mat-fab color="warn"  (click)="openAddMoneyToWalletDialog()">+</button>
             </div> 
         </mat-toolbar>
       </div>

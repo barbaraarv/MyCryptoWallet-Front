@@ -2,7 +2,18 @@
     & .header{
         & .first-header{
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
+
+            & .first-header-content{
+                max-width: 1200px;
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+            }
+
+            & .log-out:hover{
+                cursor: pointer;
+            }
         }
         & .second-header{
             height: 100px;
@@ -21,6 +32,14 @@
                     font-size: 1.5rem;
                 }
             }
+        }
+    }
+    & .table-container{
+        display: flex;
+        justify-content: center;
+
+        & app-table{
+            width: 100%;
         }
     }
 }

@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { PublicModule } from './public/public.module';
 import { PrivateModule } from './private/private.module';
+import { HttpClientModule } from '@angular/common/http';
 
 
 
@@ -19,6 +20,7 @@ import { PrivateModule } from './private/private.module';
     BrowserAnimationsModule,
     PublicModule,
     PrivateModule,
+    HttpClientModule
 
   ],
   providers: [],

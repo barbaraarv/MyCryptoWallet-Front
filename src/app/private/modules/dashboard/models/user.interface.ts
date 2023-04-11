@@ -5,6 +5,10 @@ export interface UserData{
     user_password:string;
     user_email:string;
     user_balance: number;
+    user_birthdate: Date;
 }
 
-/* addd birthdate maybe(?) */
+export interface UserBalanceData{
+    user_id: string;
+    user_balance: number;
+}

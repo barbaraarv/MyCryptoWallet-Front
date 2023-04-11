@@ -1,5 +1,10 @@
+import { AddMoneyInBalanceComponent } from './../../components/add-money-in-balance/add-money-in-balance.component';
 import { Component, OnInit } from '@angular/core';
-import { UserData } from '../../models/user-data';
+import { UserData } from '../../models/user.interface';
+import { DashboardService } from '../../services/dashboard.service';
+import {MatDialog} from '@angular/material/dialog';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -8,18 +13,46 @@ import { UserData } from '../../models/user-data';
 })
 export class DashboardComponent implements OnInit {
 
-  user: UserData = {
-    user_id: "1",
-    user_name: "Barbara",
-    user_lastname: "Rodri",
-    user_password: "123",
-    user_email: "a@a.com",
-    user_balance: 1000,
-  }
+  user: UserData = { } as UserData
 
-  constructor() { }
+  user_id = "0" 
+  user_idFromSS: string | null = sessionStorage.getItem('user_id');
+
+  constructor( private dashboardService: DashboardService, public dialog: MatDialog,  private router: Router) { }
 
   ngOnInit(): void {
+    if(!!this.user_idFromSS){
+      this.user_id = this.user_idFromSS
+    }
+    this.getUserById()
+  }
+
+  getUserById() {
+    this.dashboardService.getUserById(this.user_id).subscribe({
+      next: user => {
+        this.user = user
+      },
+      error: error => {
+        console.log(error);
+      }
+    });
+  }
+
+  openAddMoneyToWalletDialog() {
+    let addBalanceDialog = this.dialog.open(AddMoneyInBalanceComponent);
+
+    addBalanceDialog.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if(result){
+        window.location.reload();
+      }
+    });
+  }
+
+  logOut(){
+    sessionStorage.removeItem('user_id')
+    this.router.navigate(['/log-in'])
+
   }
 
 }

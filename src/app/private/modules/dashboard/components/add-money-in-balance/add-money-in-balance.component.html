@@ -1,0 +1,20 @@
+<h2 mat-dialog-title>Add Euros into your account</h2>
+<mat-dialog-content class="mat-typography">
+  <h3>your actual balance: {{user.user_balance}}</h3>
+  <p>Write how many Euros you wanna add to yout account</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <form [formGroup]="addMoneyForm">
+
+        <mat-form-field appearance="outline">
+            <mat-label>Enter amount in euros</mat-label>
+            <input matInput  type="number" name="euros" min="1" formControlName="euros">
+        </mat-form-field>
+
+        <button mat-raised-button color="warn" (click)="addMoney()"  [mat-dialog-close]="true">Entrar</button>
+        <button mat-raised-button color="warn" mat-dialog-close>Cancel</button>
+  
+    
+        </form>
+  
+</mat-dialog-actions>

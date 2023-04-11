@@ -1,4 +1,12 @@
+import { UserTable } from './../../models/userTable.interface';
+import { DashboardService } from './../../services/dashboard.service';
 import { Component, OnInit } from '@angular/core';
+import { Crypto } from './../../models/crypto.interface'
+import { UserCrypto } from './../../models/userCrypto.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { BuyCryptoDialogComponent } from '../buy-crypto-dialog/buy-crypto-dialog.component';
+
+
 
 @Component({
   selector: 'app-table',
@@ -7,9 +15,104 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TableComponent implements OnInit {
 
-  constructor() { }
+  user_id = "0" 
+  user_idFromSS: string | null = sessionStorage.getItem('user_id');
 
-  ngOnInit(): void {
+  displayedColumns: string[] = ['crypto_name', 'crypto_value', 'crypto_stock', 'user_amount', 'user_actions'];
+  
+  cryptoTableData: UserTable[] = []
+  cryptoData: UserTable[] = []
+
+  allCrypto: Crypto[] = []
+  allUserCryptos: UserCrypto[] = []
+
+  constructor(private dashboardService: DashboardService,  public dialog: MatDialog) {}
+
+  ngOnInit() {
+    if(!!this.user_idFromSS){
+      this.user_id = this.user_idFromSS
+    }
+    this.getUserCryptos()
   }
+  
+  getUserCryptos() {
+    
+    this.dashboardService.getAllUserCryptoOfUser(this.user_id).subscribe({
+      next: userCryptos => {
+        console.log(userCryptos)
+        this.allUserCryptos = userCryptos
+      },
+      error: error => {
+        console.log(error);
+      },
+      complete: () => {
+        this.getAllCrypto();
+      }
+    });
+  }
+
+  getAllCrypto() {
+    this.dashboardService.getAllCrypto().subscribe({
+      next: cryptos => {
+        this.allCrypto = cryptos
+      },
+      error: error => {
+        console.log(error);
+      },
+      complete: () => {
+        console.log('Request cryptos complete');
+        this.tableJoin()
+        this.cryptoTableData = this.cryptoData
+      }
+    });
+  }
+
+  tableJoin(){
+    var userTableData: UserTable
+    for (var i = 0 ; i<this.allCrypto.length ; i++){
+      userTableData = {
+        crypto_id: this.allCrypto[i].crypto_id,
+        crypto_name: this.allCrypto[i].crypto_name,
+        crypto_value: this.allCrypto[i].crypto_value,
+        crypto_stock: this.allCrypto[i].crypto_stock,
+        user_amount: 0
+      }
+      this.cryptoData.push(userTableData)
+    }
+    if(!!this.allUserCryptos[0]){
+      this.getUserAmountIntoTable(this.cryptoData, this.allUserCryptos)
+    }
+    
+  }
+
+  getUserAmountIntoTable(cryptoData: UserTable[], allUserCryptos: UserCrypto[]){
+      console.log(allUserCryptos[0].w_crypto_amount)
+      for (var i = 0 ; i < cryptoData.length ; i++){
+        for (var j = 0 ; j < allUserCryptos.length ; j++){
+          if (cryptoData[i].crypto_id == allUserCryptos[j].w_crypto_id){
+            cryptoData[i].user_amount = allUserCryptos[j].w_crypto_amount
+          }
+        }
+      }
+    console.log(cryptoData)
+  }
+
+  openAddEurosToWalletDialog(crypto_id: string){
+
+  sessionStorage.setItem('crypto_id', crypto_id);
+  let butCryptoDialog = this.dialog.open(BuyCryptoDialogComponent);
+
+  butCryptoDialog.afterClosed().subscribe(result => {
+    sessionStorage.removeItem('crypto_id')
+    console.log(`Dialog result: ${result}`);
+    if(result){
+      window.location.reload();
+    }
+  });
+
+  }
+
+
+  
 
 }
