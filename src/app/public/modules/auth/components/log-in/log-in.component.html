@@ -2,7 +2,7 @@
 
     <div class="login-container">
         <div class="login-title">
-            <span>Bienvenido a My CryptoWallet, una app de: </span>
+            <span>Welcome to My CryptoWallet, a new app from: </span>
             <span class="logo-santander"> Satander</span>
         </div>
 
@@ -22,6 +22,8 @@
                   <button mat-raised-button color="warn" (click)="sendLogin()">Entrar</button>
  
             </form>
+
+            <a [routerLink]="['/sign-up']">Dont have an account yet? Sign up!</a>
 
         </div>
     </div>

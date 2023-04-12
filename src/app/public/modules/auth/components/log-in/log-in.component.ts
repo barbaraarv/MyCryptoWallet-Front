@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../../services/login.service';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-log-in',
@@ -12,7 +13,7 @@ import { Router } from '@angular/router';
 export class LogInComponent implements OnInit {
   userLogged: UserData;
 
-  constructor(private _fb: FormBuilder, private loginService: LoginService, private router: Router) { }
+  constructor(private _fb: FormBuilder, private loginService: LoginService, private router: Router, private _snackBar: MatSnackBar) { }
 
   loginForm: FormGroup = this._fb.group({
     mail: ['', [Validators.required, Validators.email]],
@@ -47,7 +48,7 @@ export class LogInComponent implements OnInit {
       },
       error: error => {
         console.log(error);
-        alert("login no valido")
+        this.openSnackBar("Email and password combination does not exist")
       }
     });
   }
@@ -61,5 +62,10 @@ export class LogInComponent implements OnInit {
       console.log('else del redirection');
     }
   }
+
+  openSnackBar(text: string) {
+    this._snackBar.open(text, 'ok');
+  }
+
 
 }

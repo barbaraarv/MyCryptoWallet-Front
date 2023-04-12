@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DashboardService } from './../../services/dashboard.service';
 import { UserBalanceData, UserData } from '../../models/user.interface';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -18,7 +19,7 @@ export class AddMoneyInBalanceComponent implements OnInit {
   user: UserData = { } as UserData
   userBalanceData: UserBalanceData = {} as UserBalanceData
 
-  constructor(private _fb: FormBuilder, private dashboardService: DashboardService) { }
+  constructor(private _fb: FormBuilder, private dashboardService: DashboardService, private _snackBar: MatSnackBar) { }
 
   addMoneyForm: FormGroup = this._fb.group({
     euros: ['', [Validators.required, Validators.min(1)]],
@@ -48,7 +49,7 @@ export class AddMoneyInBalanceComponent implements OnInit {
   addMoney(){
     if(this.addMoneyForm.valid){
       this.addMoneyToBalance()
-      alert("Your balance has been updated")
+      this.openSnackBar("Your balance has been updated")
     }
   }
 
@@ -66,6 +67,9 @@ export class AddMoneyInBalanceComponent implements OnInit {
         console.log("listo")
       }
     });
+  }
+  openSnackBar(text: string) {
+    this._snackBar.open(text, 'ok');
   }
 
 }

@@ -65,6 +65,7 @@ export class TableComponent implements OnInit {
       }
     });
   }
+  isDataReady = false;
 
   tableJoin(){
     var userTableData: UserTable
@@ -81,8 +82,12 @@ export class TableComponent implements OnInit {
     if(!!this.allUserCryptos[0]){
       this.getUserAmountIntoTable(this.cryptoData, this.allUserCryptos)
     }
+    setTimeout(() =>{
+      this.isDataReady = true;
+    },1000)
     
   }
+  
 
   getUserAmountIntoTable(cryptoData: UserTable[], allUserCryptos: UserCrypto[]){
   
@@ -106,7 +111,10 @@ export class TableComponent implements OnInit {
     sessionStorage.removeItem('action')
     console.log(`Dialog result: ${result}`);
     if(result){
-      window.location.reload();
+      setTimeout(function(){
+        window.location.reload()
+      },1000)
+      
     }
   });
 

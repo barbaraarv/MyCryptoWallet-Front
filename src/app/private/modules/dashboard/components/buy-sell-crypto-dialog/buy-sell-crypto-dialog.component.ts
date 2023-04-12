@@ -4,6 +4,7 @@ import { DashboardService } from '../../services/dashboard.service';
 import { UserBalanceData, UserData } from '../../models/user.interface';
 import { Crypto, CryptoStock } from '../../models/crypto.interface';
 import { UserCrypto } from '../../models/userCrypto.interface';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -38,7 +39,7 @@ export class buySellCryptoDialogComponent implements OnInit {
   userAlreadyHasCrypto = false
   totalPriceHint = 0
 
-  constructor(private _fb: FormBuilder,private dashboardService: DashboardService) { }
+  constructor(private _fb: FormBuilder,private dashboardService: DashboardService, private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     if(!!this.actionFromSS){
@@ -109,14 +110,10 @@ export class buySellCryptoDialogComponent implements OnInit {
 
   addCryptoToWallet(){
     if(this.addCryptoForm.value.crypto <= this.crypto.crypto_stock){
-      alert("ok")
       let totalPrice = (this.addCryptoForm.value.crypto*this.crypto.crypto_value)
       if(totalPrice<=this.user.user_balance){
-          alert("ok")
-
           /* if already has */
           if(this.userAlreadyHasCrypto){
-            alert(this.addCryptoForm.value.crypto)
             this.updateUserCryptoAmount(this.addCryptoForm.value.crypto)
           }else{
             this.addUserCrypto()
@@ -125,11 +122,11 @@ export class buySellCryptoDialogComponent implements OnInit {
           this.updateCryptoStock(this.addCryptoForm.value.crypto)
 
       }else{
-        alert("theres not enought euros in your wallet, please introduce more money and come back")
+        this.openSnackBar("theres not enough euros in your wallet, please introduce more money and come back")
       }
       
     }else{
-      alert("there is not enought " + this.crypto.crypto_name + " in stock")
+      this.openSnackBar("there is not enough  " + this.crypto.crypto_name + " in stock")
     }
     }
 
@@ -142,12 +139,11 @@ export class buySellCryptoDialogComponent implements OnInit {
   takeCryptoFromWallet(){
     if(this.userCrypto.w_crypto_amount>=this.takeCryptoForm.value.crypto){
       let minusCrypto: number = -(this.takeCryptoForm.value.crypto)
-      alert(minusCrypto)
       this.updateUserCryptoAmount(minusCrypto)
       this.updateUserBalace()
       this.updateCryptoStock(minusCrypto)
     }else{
-      alert("theres not enought" + this.crypto.crypto_name + " in your wallet")
+      this.openSnackBar("theres not enough " + this.crypto.crypto_name + " in your wallet")
     }
     
   }
@@ -195,7 +191,6 @@ export class buySellCryptoDialogComponent implements OnInit {
         let totalPrice = (this.takeCryptoForm.value.crypto*this.crypto.crypto_value)
         newUserBalance.user_balance = (this.user.user_balance+totalPrice)
       }
-      alert(newUserBalance.user_balance)
       this.dashboardService.updateUserBalace(newUserBalance).subscribe({
         next: userBalance => {
           console.log(userBalance)
@@ -230,5 +225,9 @@ export class buySellCryptoDialogComponent implements OnInit {
     getTotalPrice(value:string){
       console.log(value)
       this.totalPriceHint = Number((Number(value)*this.crypto.crypto_value).toFixed(2))
+    }
+
+    openSnackBar(text: string) {
+      this._snackBar.open(text, 'ok');
     }
 }

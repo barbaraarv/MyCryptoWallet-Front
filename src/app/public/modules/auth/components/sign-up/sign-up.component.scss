@@ -12,6 +12,9 @@
         }
 
         & .signUp-form-container{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             & form{
                 display: flex;
                 flex-direction: column;
@@ -20,12 +23,10 @@
                 & .mat-form-field{
                     width: 300px;
                     margin-top: 15px;
-
-
-
                 }
-
-                
+            }
+            & a{
+                margin-top: 20px;
             }
         }
     }

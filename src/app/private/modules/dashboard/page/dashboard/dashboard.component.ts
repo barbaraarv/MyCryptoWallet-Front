@@ -18,19 +18,24 @@ export class DashboardComponent implements OnInit {
   user_id = "0" 
   user_idFromSS: string | null = sessionStorage.getItem('user_id');
 
+  userBalanceRounded: number
+
   constructor( private dashboardService: DashboardService, public dialog: MatDialog,  private router: Router) { }
 
   ngOnInit(): void {
     if(!!this.user_idFromSS){
       this.user_id = this.user_idFromSS
     }
-    this.getUserById()
+    if(this.user_id!="0")
+      this.getUserById()
   }
 
   getUserById() {
     this.dashboardService.getUserById(this.user_id).subscribe({
       next: user => {
         this.user = user
+        this.userBalanceRounded = Number((this.user.user_balance).toFixed(3))
+        console.log(this.userBalanceRounded)
       },
       error: error => {
         console.log(error);

@@ -1,17 +1,17 @@
-<div class="dashboard">
+<div class="dashboard" *ngIf="user_id!='0'">
     <div class="header">
         <mat-toolbar color="warn" class="first-header">
           <div class="first-header-content">
             <span>Santander <i class="stars material-symbols-outlined white-text">wallet</i> </span>
       
-          <span class="log-out" (click)="logOut()">Cerrar sesión</span>
+          <span class="log-out" (click)="logOut()">Log out</span>
           </div>
           
         </mat-toolbar>
         <mat-toolbar class="second-header">
-            <span name="userName">Hola <b>{{ user.user_name }}</b></span>
+            <span name="userName">Hello <b>{{ user.user_name }}</b></span>
             <div class="second-header-balance">
-                <span name="userBalance">tu balance actual es: <b> {{ user.user_balance }}</b>€ </span>
+                <span name="userBalance">Your current balance is: <b> {{ userBalanceRounded }}</b>€ </span>
                 <button mat-fab color="warn"  (click)="openAddMoneyToWalletDialog()">+</button>
             </div> 
         </mat-toolbar>
@@ -19,5 +19,13 @@
       <div class="table-container">
         <app-table></app-table>
       </div>
+</div>
+<div *ngIf="user_id=='0'" class="need-login">
+  <span class="neeg-login-text">To go into out home page you need to log in</span>
+  <span class="button-container">
+    <button mat-raised-button color="warn" [routerLink]="['/log-in']">Log in</button>
+    <button mat-raised-button color="warn" [routerLink]="['/sign-up']">Sign up</button>
+  </span>
+
 </div>
 

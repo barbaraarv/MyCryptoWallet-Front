@@ -11,7 +11,9 @@ import { AddMoneyInBalanceComponent } from './components/add-money-in-balance/ad
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { buySellCryptoDialogComponent } from './components/buy-sell-crypto-dialog/buy-sell-crypto-dialog.component';
-
+import { RouterModule } from '@angular/router';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 
@@ -31,7 +33,10 @@ import { buySellCryptoDialogComponent } from './components/buy-sell-crypto-dialo
     FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
-    MatInputModule 
+    MatInputModule,
+    RouterModule,
+    MatSnackBarModule,
+    MatProgressSpinnerModule
   ]
 })
 export class DashboardModule { }

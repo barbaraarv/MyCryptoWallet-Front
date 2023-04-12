@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  AbstractControl,
   FormBuilder,
   FormControl,
   FormGroup,
-  ValidatorFn,
   Validators,
 } from '@angular/forms';
+import { RegisterService } from '../../services/register.service';
+import { UserData } from 'src/app/private/modules/dashboard/models/user.interface';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-sign-up',
@@ -14,7 +16,12 @@ import {
   styleUrls: ['./sign-up.component.scss'],
 })
 export class SignUpComponent implements OnInit {
-  constructor(private _fb: FormBuilder) {}
+
+  users: UserData[] = [ ] as UserData[]
+
+  newUser: UserData = {} as UserData
+
+  constructor(private _fb: FormBuilder, private registerService: RegisterService, public router: Router, private _snackBar: MatSnackBar) {}
 
   signUpForm: FormGroup = this._fb.group(
     {
@@ -56,7 +63,20 @@ export class SignUpComponent implements OnInit {
     { validators: this.secondPasswordValidator('password', 'secondPassword') }
   );
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getAllUsers()
+  }
+
+  getAllUsers() {
+    this.registerService.getAllUsers().subscribe({
+      next: users => {
+        this.users = users
+      },
+      error: error => {
+        console.log(error);
+      }
+    });
+  }
 
   isAnAdultValidator(birthdate: FormControl) {
     let birthdateDate = new Date(birthdate.value);
@@ -88,12 +108,54 @@ export class SignUpComponent implements OnInit {
       }
     };
   }
+  
+  checkEmailExistance(): boolean{
+    let emailExists = false
+    this.users.forEach(user => {
+      if(this.signUpForm.value.mail == user.user_email){
+        emailExists = true
+      }
+    });
+    return emailExists
+  }
 
   sendsignUp() {
     if (this.signUpForm.invalid) {
       console.log('form invalid', this.signUpForm.errors);
+      this.openSnackBar("Must complete all inputs correctly")
     } else {
       console.log('signup valido');
+      if(!this.checkEmailExistance()){
+        this.addUser()
+      }else{
+        this.openSnackBar("That email already exists")
+      }
     }
   }
+
+  addUser(){
+    this.newUser.user_name = this.signUpForm.value.name
+    this.newUser.user_lastname = this.signUpForm.value.lastName
+    this.newUser.user_id = this.signUpForm.value.id
+    this.newUser.user_birthdate = this.signUpForm.value.birthdate
+    this.newUser.user_email= this.signUpForm.value.mail
+    this.newUser.user_password= this.signUpForm.value.password
+    this.newUser.user_balance= 0
+
+    this.registerService.addUser(this.newUser).subscribe({
+      next: userid => {
+        this.router.navigate(['/log-in'])
+      },
+      error: error => {
+        console.log(error);
+        this.openSnackBar("Must complete all inputs correctly")
+      }
+    });
+  }
+
+  openSnackBar(text: string) {
+    this._snackBar.open(text, 'ok');
+  }
+
+
 }
