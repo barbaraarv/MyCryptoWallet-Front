@@ -41,14 +41,7 @@ export class SignUpComponent implements OnInit {
           Validators.pattern('^[ñÑa-zA-Z ]*$'),
         ],
       ],
-      id: [
-        '',
-        [
-          Validators.required,
-          Validators.maxLength(9),
-          Validators.pattern('^[a-zA-Z0-9]*$'),
-        ],
-      ],
+      
       birthdate: ['', [Validators.required, this.isAnAdultValidator]],
       mail: ['', [Validators.required, Validators.email]],
       password: [
@@ -64,6 +57,9 @@ export class SignUpComponent implements OnInit {
   );
 
   ngOnInit(): void {
+     let user_id: string | null = sessionStorage.getItem('user_id');
+    if(!!user_id)
+      this.router.navigate(['/home'])
     this.getAllUsers()
   }
 
@@ -144,7 +140,12 @@ export class SignUpComponent implements OnInit {
 
     this.registerService.addUser(this.newUser).subscribe({
       next: userid => {
-        this.router.navigate(['/log-in'])
+     
+        this.openSnackBar("Succesfull registration")
+
+          this.router.navigate(['/log-in'])
+ 
+
       },
       error: error => {
         console.log(error);

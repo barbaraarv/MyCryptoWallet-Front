@@ -11,8 +11,12 @@
             <input matInput  type="number" name="euros" min="1" formControlName="euros">
         </mat-form-field>
 
-        <button mat-raised-button color="warn" (click)="addMoney()"  [mat-dialog-close]="true">Entrar</button>
+        <div class="buttons">
+          <button mat-raised-button color="warn" (click)="addMoney()"  [mat-dialog-close]="true">Insert</button>
         <button mat-raised-button color="warn" mat-dialog-close>Cancel</button>
+        </div>
+
+        
   
     
         </form>

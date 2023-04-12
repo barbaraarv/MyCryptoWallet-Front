@@ -15,10 +15,15 @@
         <input type="number" name="crypto" min="0.005" formControlName="crypto" matInput #cryptoinput (keyup)="getTotalPrice(cryptoinput.value)"/>
         <mat-hint align="end" class="text-regular-xs">Total price in euros: {{ totalPriceHint }}</mat-hint>
       </mat-form-field>
-      <button mat-raised-button color="warn" (click)="buyCrypto()" [mat-dialog-close]="true">
-        Entrar
-      </button>
-      <button mat-raised-button color="warn" mat-dialog-close>Cancel</button>
+
+      <div class="buttons">
+        <button mat-raised-button color="warn" (click)="buyCrypto()" [mat-dialog-close]="true">
+          Buy
+        </button>
+        <button mat-raised-button color="warn" mat-dialog-close>Cancel</button>
+
+      </div>
+      
     </form>
   </mat-dialog-actions>
 </div>
@@ -41,15 +46,18 @@
         <mat-hint align="end" class="text-regular-xs">Total price in euros: {{ totalPriceHint }}</mat-hint>
       </mat-form-field>
 
-      <button
+      <div class="buttons">
+        <button
         mat-raised-button
         color="warn"
         (click)="sellCrypto()"
         [mat-dialog-close]="true"
       >
-        Entrar
+        Sell
       </button>
       <button mat-raised-button color="warn" mat-dialog-close>Cancel</button>
+      </div>
+      
     </form>
   </mat-dialog-actions>
 </div>

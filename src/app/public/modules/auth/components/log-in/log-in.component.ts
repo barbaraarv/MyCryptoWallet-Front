@@ -21,6 +21,9 @@ export class LogInComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    let user_id: string | null = sessionStorage.getItem('user_id');
+    if(!!user_id)
+      this.router.navigate(['/home'])
   }
 
   sendLogin() {
