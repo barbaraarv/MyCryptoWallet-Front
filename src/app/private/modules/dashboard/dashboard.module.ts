@@ -10,7 +10,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import { AddMoneyInBalanceComponent } from './components/add-money-in-balance/add-money-in-balance.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import { BuyCryptoDialogComponent } from './components/buy-crypto-dialog/buy-crypto-dialog.component';
+import { buySellCryptoDialogComponent } from './components/buy-sell-crypto-dialog/buy-sell-crypto-dialog.component';
 
 
 
@@ -20,7 +20,7 @@ import { BuyCryptoDialogComponent } from './components/buy-crypto-dialog/buy-cry
     DashboardComponent,
     TableComponent,
     AddMoneyInBalanceComponent,
-    BuyCryptoDialogComponent
+    buySellCryptoDialogComponent
   ],
   imports: [
     CommonModule,

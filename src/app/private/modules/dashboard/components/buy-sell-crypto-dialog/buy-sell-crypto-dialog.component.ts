@@ -7,15 +7,14 @@ import { UserCrypto } from '../../models/userCrypto.interface';
 
 
 @Component({
-  selector: 'app-buy-crypto-dialog',
-  templateUrl: './buy-crypto-dialog.component.html',
-  styleUrls: ['./buy-crypto-dialog.component.scss']
+  selector: 'app-buy-sell-crypto-dialog',
+  templateUrl: './buy-sell-crypto-dialog.component.html',
+  styleUrls: ['./buy-sell-crypto-dialog.component.scss']
 })
-export class BuyCryptoDialogComponent implements OnInit {
+export class buySellCryptoDialogComponent implements OnInit {
 
-  addCryptoForm: FormGroup = this._fb.group({
-    crypto: ['', [Validators.required, Validators.min(0.005)]],
-  });
+  action= ""
+  actionFromSS: string | null = sessionStorage.getItem('action');
 
   user_id = "0" 
   user_idFromSS: string | null = sessionStorage.getItem('user_id');
@@ -24,15 +23,27 @@ export class BuyCryptoDialogComponent implements OnInit {
   crypto_idFromSS: string | null = sessionStorage.getItem('crypto_id');
 
 
+  addCryptoForm: FormGroup = this._fb.group({
+    crypto: ['', [Validators.required, Validators.min(0.005)]],
+  });
+
+  takeCryptoForm: FormGroup = this._fb.group({
+    crypto: ['', [Validators.required, Validators.min(0.005)]],
+  });
+
+
   user: UserData = { } as UserData
   crypto: Crypto = { } as Crypto
   userCrypto: UserCrypto= {} as UserCrypto
-
   userAlreadyHasCrypto = false
+  totalPriceHint = 0
 
   constructor(private _fb: FormBuilder,private dashboardService: DashboardService) { }
 
   ngOnInit(): void {
+    if(!!this.actionFromSS){
+      this.action = this.actionFromSS
+    }
     if(!!this.user_idFromSS){
       this.user_id = this.user_idFromSS
     }
@@ -94,7 +105,6 @@ export class BuyCryptoDialogComponent implements OnInit {
     if(this.addCryptoForm.valid){
       this.addCryptoToWallet()
     }
-
   }
 
   addCryptoToWallet(){
@@ -106,27 +116,44 @@ export class BuyCryptoDialogComponent implements OnInit {
 
           /* if already has */
           if(this.userAlreadyHasCrypto){
-            this.updateUserCryptoAmount()
+            alert(this.addCryptoForm.value.crypto)
+            this.updateUserCryptoAmount(this.addCryptoForm.value.crypto)
           }else{
             this.addUserCrypto()
           }
           this.updateUserBalace()
-          this.updateCryptoStock()
+          this.updateCryptoStock(this.addCryptoForm.value.crypto)
 
       }else{
         alert("theres not enought euros in your wallet, please introduce more money and come back")
       }
       
     }else{
-      alert("there is not enought " + this.crypto.crypto_name + " en stock")
+      alert("there is not enought " + this.crypto.crypto_name + " in stock")
+    }
     }
 
+  sellCrypto(){
+    if(this.takeCryptoForm.valid){
+      this.takeCryptoFromWallet()
     }
+  }
 
-    updateUserCryptoAmount(){
-      console.log(this.userCrypto.w_crypto_amount)
-      this.userCrypto.w_crypto_amount += this.addCryptoForm.value.crypto
-      console.log(this.userCrypto.w_crypto_amount)
+  takeCryptoFromWallet(){
+    if(this.userCrypto.w_crypto_amount>=this.takeCryptoForm.value.crypto){
+      let minusCrypto: number = -(this.takeCryptoForm.value.crypto)
+      alert(minusCrypto)
+      this.updateUserCryptoAmount(minusCrypto)
+      this.updateUserBalace()
+      this.updateCryptoStock(minusCrypto)
+    }else{
+      alert("theres not enought" + this.crypto.crypto_name + " in your wallet")
+    }
+    
+  }
+
+    updateUserCryptoAmount(cryptoAmount:number){
+      this.userCrypto.w_crypto_amount += cryptoAmount
       this.dashboardService.updateUserCryptoAmount(this.userCrypto).subscribe({
         next: newUserCrypto => {
           console.log(newUserCrypto)
@@ -159,11 +186,16 @@ export class BuyCryptoDialogComponent implements OnInit {
     }
 
     updateUserBalace(){
-      let totalPrice = (this.addCryptoForm.value.crypto*this.crypto.crypto_value)
-
       let newUserBalance: UserBalanceData = {} as UserBalanceData
       newUserBalance.user_id = this.user_id
-      newUserBalance.user_balance = (this.user.user_balance-totalPrice)
+      if(this.action=='buy'){
+        let totalPrice = (this.addCryptoForm.value.crypto*this.crypto.crypto_value)
+        newUserBalance.user_balance = (this.user.user_balance-totalPrice)
+      }else{
+        let totalPrice = (this.takeCryptoForm.value.crypto*this.crypto.crypto_value)
+        newUserBalance.user_balance = (this.user.user_balance+totalPrice)
+      }
+      alert(newUserBalance.user_balance)
       this.dashboardService.updateUserBalace(newUserBalance).subscribe({
         next: userBalance => {
           console.log(userBalance)
@@ -177,10 +209,10 @@ export class BuyCryptoDialogComponent implements OnInit {
       });
     }
 
-    updateCryptoStock(){
+    updateCryptoStock(cryptoAmount: number){
       let cryptoStock: CryptoStock = {} as CryptoStock
       cryptoStock.crypto_id = this.crypto_id
-      cryptoStock.crypto_stock = (this.crypto.crypto_stock-this.addCryptoForm.value.crypto)
+      cryptoStock.crypto_stock = (this.crypto.crypto_stock-cryptoAmount)
 
       this.dashboardService.updateCryptoStock(cryptoStock).subscribe({
         next: userBalance => {
@@ -193,5 +225,10 @@ export class BuyCryptoDialogComponent implements OnInit {
           console.log("listo")
         }
       });
+    }
+
+    getTotalPrice(value:string){
+      console.log(value)
+      this.totalPriceHint = Number((Number(value)*this.crypto.crypto_value).toFixed(2))
     }
 }

@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { Crypto } from './../../models/crypto.interface'
 import { UserCrypto } from './../../models/userCrypto.interface';
 import { MatDialog } from '@angular/material/dialog';
-import { BuyCryptoDialogComponent } from '../buy-crypto-dialog/buy-crypto-dialog.component';
+import { buySellCryptoDialogComponent } from '../buy-sell-crypto-dialog/buy-sell-crypto-dialog.component';
 
 
 
@@ -39,7 +39,6 @@ export class TableComponent implements OnInit {
     
     this.dashboardService.getAllUserCryptoOfUser(this.user_id).subscribe({
       next: userCryptos => {
-        console.log(userCryptos)
         this.allUserCryptos = userCryptos
       },
       error: error => {
@@ -60,7 +59,7 @@ export class TableComponent implements OnInit {
         console.log(error);
       },
       complete: () => {
-        console.log('Request cryptos complete');
+        
         this.tableJoin()
         this.cryptoTableData = this.cryptoData
       }
@@ -86,7 +85,7 @@ export class TableComponent implements OnInit {
   }
 
   getUserAmountIntoTable(cryptoData: UserTable[], allUserCryptos: UserCrypto[]){
-      console.log(allUserCryptos[0].w_crypto_amount)
+  
       for (var i = 0 ; i < cryptoData.length ; i++){
         for (var j = 0 ; j < allUserCryptos.length ; j++){
           if (cryptoData[i].crypto_id == allUserCryptos[j].w_crypto_id){
@@ -94,16 +93,17 @@ export class TableComponent implements OnInit {
           }
         }
       }
-    console.log(cryptoData)
   }
 
-  openAddEurosToWalletDialog(crypto_id: string){
+  buySellCryptoDialog(crypto_id: string, action:string){
 
   sessionStorage.setItem('crypto_id', crypto_id);
-  let butCryptoDialog = this.dialog.open(BuyCryptoDialogComponent);
+  sessionStorage.setItem('action', action);
+  let butCryptoDialog = this.dialog.open(buySellCryptoDialogComponent);
 
   butCryptoDialog.afterClosed().subscribe(result => {
     sessionStorage.removeItem('crypto_id')
+    sessionStorage.removeItem('action')
     console.log(`Dialog result: ${result}`);
     if(result){
       window.location.reload();
